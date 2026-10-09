@@ -1,0 +1,140 @@
+{
+  "main": "index.html",
+  "logo": "logo.png",
+  "preload": "preload.js",
+  "features": [
+    {
+      "code": "edit",
+      "description": "图片编辑：缩放、旋转、翻转、裁切",
+      "cmds": [
+        "图片编辑",
+        "裁剪图片",
+        "旋转图片",
+        {
+          "type": "img",
+          "label": "图片编辑"
+        },
+        {
+          "type": "files",
+          "label": "图片编辑",
+          "fileType": "file",
+          "extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "jfif",
+            "webp",
+            "gif",
+            "bmp",
+            "tif",
+            "tiff",
+            "avif",
+            "heic",
+            "heif",
+            "svg",
+            "ico"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "code": "stitch",
+      "description": "图片拼接：固定网格、自由网格、长图拼接",
+      "cmds": [
+        "图片拼接",
+        "拼图",
+        "长图拼接",
+        {
+          "type": "files",
+          "label": "图片拼接",
+          "fileType": "file",
+          "extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "jfif",
+            "webp",
+            "gif",
+            "bmp",
+            "tif",
+            "tiff",
+            "avif",
+            "heic",
+            "heif",
+            "svg",
+            "ico"
+          ],
+          "minLength": 2,
+          "maxLength": 500
+        },
+        {
+          "type": "files",
+          "label": "文件夹图片拼接",
+          "fileType": "directory",
+          "minLength": 1,
+          "maxLength": 20
+        }
+      ]
+    },
+    {
+      "code": "workflow",
+      "description": "图片工作流：把编辑、拼接、导出串联批量执行",
+      "cmds": [
+        "图片工作流",
+        {
+          "type": "files",
+          "label": "图片工作流",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "code": "presets",
+      "description": "管理拼图网格预设",
+      "cmds": [
+        "拼图网格预设"
+      ]
+    },
+    {
+      "code": "ai",
+      "description": "用一句话让 AI 编排图片的编辑、拼接、导出",
+      "cmds": [
+        "AI 图片编排",
+        "AI 拼图",
+        {
+          "type": "files",
+          "label": "AI 图片编排",
+          "fileType": "file",
+          "extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "jfif",
+            "webp",
+            "gif",
+            "bmp",
+            "tif",
+            "tiff",
+            "avif",
+            "heic",
+            "heif",
+            "svg",
+            "ico"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "files",
+          "label": "AI 编排文件夹图片",
+          "fileType": "directory",
+          "minLength": 1,
+          "maxLength": 20
+        }
+      ]
+    }
+  ]
+}
