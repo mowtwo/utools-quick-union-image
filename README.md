@@ -47,3 +47,7 @@ pnpm watch        # 监听修改并持续构建
 - `public/plugin.json`：功能与指令配置
 - `src/`：前端界面
 - `release/`：发布用的 Logo、截图和文案
+
+## License
+
+[MIT](LICENSE)
