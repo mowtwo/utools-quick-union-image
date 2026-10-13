@@ -519,4 +519,12 @@ window.services = {
   },
 }
 
+// MCP 工具（声明见 plugin.json 的 tools）：在插件初始化时注册，AI Agent 调用时不依赖主界面。
+// 模块由 src/mcp 构建而来；单独 try，注册失败不影响插件本身
+try {
+  if (typeof utools.registerTool === 'function') require('./mcp-tools.js').registerMcpTools(utools)
+} catch (err) {
+  console.error('[快拼图] MCP 工具注册失败', err)
+}
+
 window.__quickUnionPreload = 'ok'

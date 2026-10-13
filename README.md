@@ -14,6 +14,7 @@
 - **网格预设**：保存版式和图片序号，可以注册为 uTools 动态指令
 - **图片编辑**：旋转、翻转、裁切、缩放，可以批量应用
 - **工作流**：把编辑、拼接、导出串起来批量处理，可以注册为 uTools 动态指令
+- **MCP 工具**：通过 uTools MCP 服务向 Claude Code、Codex 等 AI Agent 提供 `list_presets`、`stitch_images`、`edit_images`、`run_workflow`
 - **AI 编排**：通过 uTools AI 用一句话生成执行计划，指令使用 JSON 协议，并且只能调用插件内的功能
 - 撤销 / 重做、快捷键、画布独立缩放（支持触控板）
 
@@ -44,7 +45,8 @@ pnpm watch        # 监听修改并持续构建
 
 - `public/preload.js`：preload 桥接层（CommonJS，原样复制到 dist，不打包也不压缩，符合 uTools 审核要求）
 - `public/package.json`：声明 `"type": "commonjs"`，避免根目录的 `"type": "module"` 让 preload 被当成 ES 模块加载
-- `public/plugin.json`：功能与指令配置
+- `public/plugin.json`：功能与指令配置，`tools` 字段声明 MCP 工具
+- `src/mcp/`：MCP 工具实现，复用界面的布局计算和工作流执行；由 `vite.mcp.config.ts` 构建为不压缩的 `dist/mcp-tools.js`，在 preload 中注册
 - `src/`：前端界面
 - `release/`：发布用的 Logo、截图和文案
 
