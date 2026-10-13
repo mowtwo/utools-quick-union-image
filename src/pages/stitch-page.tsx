@@ -41,7 +41,7 @@ export function StitchPage() {
   /** 用新图片替换指定序号；多出的图片插在最后一个被替换位置之后 */
   const replaceSlots = async (slots: number[], given?: string[]) => {
     const targets = [...slots].sort((a, b) => a - b)
-    const paths = given ?? pickImageFiles()
+    const paths = given ?? (await pickImageFiles())
     if (!paths.length) return
     setBusy('导入图片…')
     try {

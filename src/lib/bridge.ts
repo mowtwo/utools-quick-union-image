@@ -153,32 +153,36 @@ export const IMAGE_FILTER = {
   extensions: ['png', 'jpg', 'jpeg', 'jfif', 'webp', 'gif', 'bmp', 'tif', 'tiff', 'avif', 'heic', 'heif', 'svg', 'ico'],
 }
 
-export function pickImageFiles(): string[] {
-  return (
-    utools().showOpenDialog({
-      title: '选择图片',
-      filters: [IMAGE_FILTER],
-      properties: ['openFile', 'multiSelections'],
-    }) ?? []
-  )
+/**
+ * 打开文件对话框。在 whatevertools 兼容层（独立桌面应用、网页版）里优先用异步版：
+ * 网页没法同步弹出文件选择器。uTools 里没有这个 API，照常用 showOpenDialog。
+ */
+async function openDialog(options: Parameters<UToolsApi['showOpenDialog']>[0]): Promise<string[]> {
+  const native = (globalThis as Record<symbol, { dialog?: { openAsync?(o: unknown): Promise<string[] | undefined> } } | undefined>)[Symbol.for('whatevertools.api')]
+  if (native?.dialog?.openAsync) return (await native.dialog.openAsync(options)) ?? []
+  return utools().showOpenDialog(options) ?? []
 }
 
-export function pickFolders(): string[] {
-  return (
-    utools().showOpenDialog({
-      title: '选择图片文件夹',
-      properties: ['openDirectory', 'multiSelections'],
-    }) ?? []
-  )
+export function pickImageFiles(): Promise<string[]> {
+  return openDialog({
+    title: '选择图片',
+    filters: [IMAGE_FILTER],
+    properties: ['openFile', 'multiSelections'],
+  })
 }
 
-export function pickAnyFiles(): string[] {
-  return (
-    utools().showOpenDialog({
-      title: '选择文件（自动过滤出图片）',
-      properties: ['openFile', 'multiSelections'],
-    }) ?? []
-  )
+export function pickFolders(): Promise<string[]> {
+  return openDialog({
+    title: '选择图片文件夹',
+    properties: ['openDirectory', 'multiSelections'],
+  })
+}
+
+export function pickAnyFiles(): Promise<string[]> {
+  return openDialog({
+    title: '选择文件（自动过滤出图片）',
+    properties: ['openFile', 'multiSelections'],
+  })
 }
 
 export function clipboardPaths(): string[] {

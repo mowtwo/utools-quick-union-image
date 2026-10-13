@@ -22,12 +22,12 @@ interface Props {
 
 /** 多图片 / 文件夹 / 多文件 / 剪贴板 四种来源 */
 export function ImportMenu({ onPaths, onClipboard, label = '添加图片', size = 'sm', variant = 'default' }: Props) {
-  const run = (fn: () => string[]) => {
+  const run = async (fn: () => string[] | Promise<string[]>) => {
     if (!isUtools()) {
       toast.error(envProblem() ?? '运行环境异常')
       return
     }
-    const paths = fn()
+    const paths = await fn()
     if (paths.length) onPaths(paths)
   }
   return (
