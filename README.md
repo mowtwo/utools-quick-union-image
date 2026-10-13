@@ -57,12 +57,13 @@ pnpm watch        # 监听修改并持续构建
 - [在线试用网页版](https://whatevertools.mowtwo.com/demo/quick-union-image/index.html) · [案例说明](https://whatevertools.mowtwo.com/cases/quick-union-image)
 
 ```bash
-pnpm build
-npx whatevertools pack dist --target web        # 静态网页（图片处理用浏览器 Canvas 实现）
-npx whatevertools pack dist --target electron   # Electron 独立应用
+pnpm release        # dist（uTools 插件）+ out/utools、out/electron、out/web
+pnpm release:app    # 另外出 Electron 安装包（dmg / nsis / AppImage，签名凭据走环境变量）
 ```
 
-`dist/whatevertools.json` 由构建脚本生成，只给兼容层用，uTools 不读取。
+打包配置在 `whatevertools.config.ts`，身份和权限说明在 `vite.config.ts` 的 `whatevertools({ manifest })`；`pnpm dev` 时在普通浏览器里也能调试插件界面。
+
+`dist/whatevertools.json` 由 Vite 插件生成，只给兼容层用，uTools 不读取。
 
 ## License
 
