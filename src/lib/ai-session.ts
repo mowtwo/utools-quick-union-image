@@ -43,7 +43,7 @@ interface AiState {
 }
 
 let seq = 0
-let current: UToolsAiPromise<UToolsAiMessage> | null = null
+let current: UToolsAiPromise<UTools.AiMessage> | null = null
 const MAX_RETRIES = 2
 /** 单次用户请求内，模型自动往返的上限，防止循环 */
 const MAX_ROUNDS = 8
@@ -108,8 +108,10 @@ async function exchange(payload: object, retries = 0): Promise<void> {
   useAi.setState({ thinking: true })
   let reply: UToolsAiMessage
   try {
-    current = utools().ai({ model: model || undefined, messages })
-    reply = await current
+    const call = utools().ai({ model: model || undefined, messages })
+    current = call
+    // 本插件只发纯文字，回复的 content 也是文字
+    reply = (await call) as UToolsAiMessage
   } catch (err) {
     useAi.setState({ thinking: false })
     // abort() 也会走到这里

@@ -1,5 +1,5 @@
-import { Bot, Keyboard, LayoutGrid, Loader2, Minus, PencilRuler, Plus, Redo2, Shapes, Undo2, Workflow } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Bot, Info, Keyboard, LayoutGrid, Loader2, Minus, PencilRuler, Plus, Redo2, Shapes, Undo2, Workflow } from 'lucide-react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Toaster } from '@/components/ui/sonner'
 import { usePaste } from '@/hooks/use-import'
@@ -8,11 +8,14 @@ import { installShortcuts, modKey, SHORTCUT_HELP } from '@/lib/shortcuts'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { envProblem, isUtools } from '@/lib/bridge'
 import { getZoom, setZoom, ZOOM_MAX, ZOOM_MIN } from '@/lib/zoom'
-import { AiPage } from '@/pages/ai-page'
-import { EditorPage } from '@/pages/editor-page'
-import { PresetsPage } from '@/pages/presets-page'
-import { StitchPage } from '@/pages/stitch-page'
-import { WorkflowPage } from '@/pages/workflow-page'
+// 页面按需加载：打开插件时只加载当前页，其余页面切换时再加载
+const StitchPage = lazy(() => import('@/pages/stitch-page').then((m) => ({ default: m.StitchPage })))
+const EditorPage = lazy(() => import('@/pages/editor-page').then((m) => ({ default: m.EditorPage })))
+const PresetsPage = lazy(() => import('@/pages/presets-page').then((m) => ({ default: m.PresetsPage })))
+const WorkflowPage = lazy(() => import('@/pages/workflow-page').then((m) => ({ default: m.WorkflowPage })))
+const AiPage = lazy(() => import('@/pages/ai-page').then((m) => ({ default: m.AiPage })))
+
+const REPO_URL = 'https://github.com/mowtwo/utools-quick-union-image'
 import { useStore, type Tab } from '@/store'
 
 const TABS: Array<{ value: Tab; label: string; icon: typeof LayoutGrid }> = [
@@ -75,15 +78,18 @@ export default function App() {
               <Redo2 className="size-3.5" />
             </button>
             <ShortcutHelp />
+            <About />
           </div>
           <ZoomControl />
         </header>
         <main className="min-h-0 flex-1">
-          {tab === 'stitch' && <StitchPage />}
-          {tab === 'edit' && <EditorPage />}
-          {tab === 'presets' && <PresetsPage />}
-          {tab === 'workflow' && <WorkflowPage />}
-          {tab === 'ai' && <AiPage />}
+          <Suspense fallback={<div className="flex h-full items-center justify-center text-muted-foreground"><Loader2 className="size-4 animate-spin" /></div>}>
+            {tab === 'stitch' && <StitchPage />}
+            {tab === 'edit' && <EditorPage />}
+            {tab === 'presets' && <PresetsPage />}
+            {tab === 'workflow' && <WorkflowPage />}
+            {tab === 'ai' && <AiPage />}
+          </Suspense>
         </main>
         {busy && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-[1px]">
@@ -135,6 +141,43 @@ function ShortcutHelp() {
                 <span className="self-center text-muted-foreground">{desc}</span>
               </div>
             ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
+
+/** 打开外部链接：uTools 里用系统浏览器，浏览器调试时新开标签页 */
+function openLink(url: string) {
+  if (window.utools) void window.utools.shellOpenExternal(url)
+  else window.open(url, '_blank', 'noopener')
+}
+
+function About() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button className="rounded p-1 text-muted-foreground hover:bg-muted" title="关于与版权" onClick={() => setOpen(true)}>
+        <Info className="size-3.5" />
+      </button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>关于快拼图</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 text-xs">
+            <div className="flex items-baseline justify-between">
+              <span className="text-muted-foreground">版本</span>
+              <span className="font-mono">v{__APP_VERSION__}</span>
+            </div>
+            <div className="space-y-1">
+              <div className="text-muted-foreground">原始仓库（开源，MIT 许可证）</div>
+              <button className="break-all text-left text-primary underline-offset-2 hover:underline" onClick={() => openLink(REPO_URL)}>
+                {REPO_URL}
+              </button>
+            </div>
+            <p className="text-muted-foreground">Copyright © 2026 mowtwo。欢迎在仓库里反馈问题或提交改进。</p>
           </div>
         </DialogContent>
       </Dialog>
