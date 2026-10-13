@@ -50,6 +50,20 @@ pnpm watch        # 监听修改并持续构建
 - `src/`：前端界面
 - `release/`：发布用的 Logo、截图和文案
 
+## 在 uTools 之外运行
+
+同一份构建产物可以用 [whatevertools](https://whatevertools.mowtwo.com) 打包成网页或 Electron 独立应用，uTools 的发布不受影响：
+
+- [在线试用网页版](https://whatevertools.mowtwo.com/demo/quick-union-image/index.html) · [案例说明](https://whatevertools.mowtwo.com/cases/quick-union-image)
+
+```bash
+pnpm build
+npx whatevertools pack dist --target web        # 静态网页（图片处理用浏览器 Canvas 实现）
+npx whatevertools pack dist --target electron   # Electron 独立应用
+```
+
+`dist/whatevertools.json` 由构建脚本生成，只给兼容层用，uTools 不读取。
+
 ## License
 
 [MIT](LICENSE)
