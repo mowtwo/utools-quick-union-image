@@ -17,6 +17,7 @@ const AiPage = lazy(() => import('@/pages/ai-page').then((m) => ({ default: m.Ai
 
 const REPO_URL = 'https://github.com/mowtwo/utools-quick-union-image'
 import { useStore, type Tab } from '@/store'
+import { ErrorBoundary } from '@/components/error-boundary'
 
 const TABS: Array<{ value: Tab; label: string; icon: typeof LayoutGrid }> = [
   { value: 'stitch', label: '拼接', icon: LayoutGrid },
@@ -83,13 +84,15 @@ export default function App() {
           <ZoomControl />
         </header>
         <main className="min-h-0 flex-1">
-          <Suspense fallback={<div className="flex h-full items-center justify-center text-muted-foreground"><Loader2 className="size-4 animate-spin" /></div>}>
-            {tab === 'stitch' && <StitchPage />}
-            {tab === 'edit' && <EditorPage />}
-            {tab === 'presets' && <PresetsPage />}
-            {tab === 'workflow' && <WorkflowPage />}
-            {tab === 'ai' && <AiPage />}
-          </Suspense>
+          <ErrorBoundary key={tab}>
+            <Suspense fallback={<div className="flex h-full items-center justify-center text-muted-foreground"><Loader2 className="size-4 animate-spin" /></div>}>
+              {tab === 'stitch' && <StitchPage />}
+              {tab === 'edit' && <EditorPage />}
+              {tab === 'presets' && <PresetsPage />}
+              {tab === 'workflow' && <WorkflowPage />}
+              {tab === 'ai' && <AiPage />}
+            </Suspense>
+          </ErrorBoundary>
         </main>
         {busy && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-[1px]">
